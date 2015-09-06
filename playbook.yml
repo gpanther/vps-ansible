@@ -3,6 +3,6 @@
   roles:
     - common
     - database
-#    - web_and_app_server
+    - web_and_app_server
 #    - { role: wordpress, name: 'gpanther-blog' }
 

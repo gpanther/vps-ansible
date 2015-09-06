@@ -1,0 +1,15 @@
+---
+- apt: name={{ item }} state=installed
+  with_items:
+    - apache2
+    - apache2-mpm-event
+    - uwsgi
+    - uwsgi-plugin-php
+    - libapache2-mod-proxy-uwsgi
+    - php5-mysql
+    - php5-adodb
+    - php5-imagick
+    - php5-mcrypt
+    - php5-memcache
+    - memcached
+

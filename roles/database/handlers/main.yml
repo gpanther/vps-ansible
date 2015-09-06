@@ -1,4 +1,6 @@
 ---
+# the equivalent of "mysql_secure_installation", but without needing user input
+# inspired by http://stackoverflow.com/a/27759061
 - name: secure mariadb
   shell: mysql -e "{{ item }}"
   # if we re-execute these, some might fail, so ignore those

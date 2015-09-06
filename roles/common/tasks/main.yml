@@ -1,0 +1,30 @@
+---
+- apt: update_cache=yes cache_valid_time=3600
+
+- apt: upgrade=safe
+
+- apt: name={{ item }} state=installed
+  with_items:
+    - vim-nox
+    - mc
+    - mosh
+    - wget
+    - curl
+    - build-essential
+    - htop
+    - iotop
+    - iptables-persistent
+
+- copy: src=sshd_config dest=/etc/ssh/sshd_config owner=root group=root mode=0400
+  notify:
+  - restart sshd
+
+- copy: content="" dest=/home/deploy/.hushlogin owner=deploy group=deploy mode=0400
+
+- copy: src=iptables-rules.v4 dest=/etc/iptables/rules.v4 owner=root group=root mode=0400
+  notify:
+  - reload iptables
+
+- copy: src=iptables-rules.v6 dest=/etc/iptables/rules.v6 owner=root group=root mode=0400
+  notify:
+  - reload iptables

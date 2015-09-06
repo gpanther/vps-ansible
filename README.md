@@ -8,9 +8,9 @@ Ansible playbook for personal server
 ```
 
 * On the host side:
-** The user "deploy" needs to exists
-** It needs to have the corresponding public key installed
-** It needs to have "sudo" rights without password. The simplest way is to add the following to `/etc/sudoders`: `deploy ALL=(ALL) NOPASSWD:ALL`
+  * The user "deploy" needs to exists
+  * It needs to have the corresponding public key installed
+  * It needs to have "sudo" rights without password. The simplest way is to add the following to `/etc/sudoders`: `deploy ALL=(ALL) NOPASSWD:ALL`
 
 * Run playbook:
 ```

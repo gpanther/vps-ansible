@@ -1,0 +1,12 @@
+---
+- name: secure mariadb
+  shell: mysql -e "{{ item }}"
+  # if we re-execute these, some might fail, so ignore those
+  ignore_errors: yes
+  with_items:
+    - "UPDATE mysql.user SET Password = PASSWORD('{{ mysql_root_password }}') WHERE User = 'root'"
+    - "DROP USER ''@'localhost'"
+    - "DROP USER ''@'$(hostname)'"
+    - "DROP DATABASE test"
+    - "FLUSH PRIVILEGES"
+

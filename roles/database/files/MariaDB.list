@@ -1,5 +1,0 @@
-# MariaDB 10.0 repository list - created 2015-09-06 15:25 UTC
-# http://mariadb.org/mariadb/repositories/
-deb http://ftp.eenet.ee/pub/mariadb/repo/10.0/ubuntu vivid main
-deb-src http://ftp.eenet.ee/pub/mariadb/repo/10.0/ubuntu vivid main
-

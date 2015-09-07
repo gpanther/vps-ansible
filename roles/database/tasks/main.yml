@@ -1,8 +1,4 @@
 ---
-- copy: src=MariaDB.list dest=/etc/apt/sources.list.d/MariaDB.list owner=root group=root mode=0400
-- apt_key: keyserver=keyserver.ubuntu.com id=CBCB082A1BB943DB
-- apt: update_cache=yes cache_valid_time=3600
-
 - apt: name={{ item }} state=installed
   with_items:
     - mariadb-client

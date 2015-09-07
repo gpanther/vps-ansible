@@ -5,4 +5,6 @@
     - database
     - web_and_app_server
 #    - { role: wordpress, name: 'gpanther-blog' }
+#    - { role: wordpress, name: 'itevents-ro' }
+#    - { role: wordpress, name: 'transylvaniajug' }
 

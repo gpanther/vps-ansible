@@ -5,11 +5,18 @@
     - apache2-mpm-event
     - uwsgi
     - uwsgi-plugin-php
+    - php5-curl
+    - php5-gd
+    - php5-json
+    - php5-sqlite
+    - php5-tidy
     - php5-mysql
     - php5-adodb
     - php5-imagick
     - php5-mcrypt
     - php5-memcache
+    - php5-xmlrpc
+    - php5-xsl
     - memcached
 
 # need to enable mod-proxy since mod-proxy-uwsgi depends on it
@@ -18,4 +25,23 @@
 - apt: name={{ item }} state=installed
   with_items:
     - libapache2-mod-proxy-uwsgi
+
+- copy: src=php.ini dest=/etc/php5/embed/php.ini owner=root group=root mode=0444
+  notify:
+  - restart uwsgi
+
+- shell: rm /etc/php5/embed/conf.d/*.ini
+  args:
+    removes: /etc/php5/embed/conf.d/*.ini
+  notify:
+  - restart uwsgi
+
+# mod_headers needed by security.conf
+- shell: a2enmod headers creates=/etc/apache2/mods-enabled/headers.load
+  notify:
+  - restart apache
+
+- copy: src=apache-security.conf dest=/etc/apache2/conf-available/security.conf owner=root group=root mode=0400
+  notify:
+  - restart apache
 

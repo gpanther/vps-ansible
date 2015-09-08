@@ -26,10 +26,15 @@
   with_items:
     - libapache2-mod-proxy-uwsgi
 
+# harden php based on suggestions from:
+# http://www.madirish.net/199
+# http://phpsec.org/projects/phpsecinfo/index.html
+# https://www.idontplaydarts.com/2011/02/hardening-and-securing-php-on-linux/
 - copy: src=php.ini dest=/etc/php5/embed/php.ini owner=root group=root mode=0444
   notify:
   - restart uwsgi
 
+# remove all installed modules - they will be added back to the specific applications as needed
 - shell: rm /etc/php5/embed/conf.d/*.ini
   args:
     removes: /etc/php5/embed/conf.d/*.ini

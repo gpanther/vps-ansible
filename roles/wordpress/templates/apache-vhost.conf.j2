@@ -1,0 +1,20 @@
+<VirtualHost {{ domain_name }}:80>
+    <Location ~ "^/$">
+        # theoretically we could use unix sockets here for better security (since they can be secured
+        # using ownership / access rights), but for now Apache doesn't quite work right. Ie. if you
+        # specify unix:/run/uwsgi/app/site/socket|uwsgi://, it will say
+        # "error parsing URL //: Invalid host/port"
+        ProxyPass uwsgi://127.1.0.1:{{ id }}/
+    </Location>
+
+    ServerAdmin webmaster@{{ domain_name }}
+    DocumentRoot /home/{{ name }}/webroot
+    <Directory /home/{{ name }}/webroot>
+        AllowOverride None
+        Require all granted
+
+        Order Allow,Deny
+        Allow from all
+    </Directory>
+</VirtualHost>
+

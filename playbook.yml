@@ -1,10 +1,19 @@
 ---
 - hosts: all
+  vars_files:
+  - database_passwords.yml
   roles:
-    - common
-    - database
-    - web_and_app_server
-#    - { role: wordpress, name: 'gpanther-blog' }
-#    - { role: wordpress, name: 'itevents-ro' }
-#    - { role: wordpress, name: 'transylvaniajug' }
+  - common
+  - database
+  - web_and_app_server
+  - {
+      id: 3001,
+      role: wordpress,
+      name: 'gpanther_blog',
+      domain_name: 'blog.grey-panther.info',
+      db_admin_password: '{{ gpanther_blog_wp_db_admin_password }}',
+      db_user_password: '{{ gpanther_blog_wp_db_user_password }}',
+    }
+#  - { role: wordpress, name: 'itevents_ro' }
+#  - { role: wordpress, name: 'transylvaniajug' }
 

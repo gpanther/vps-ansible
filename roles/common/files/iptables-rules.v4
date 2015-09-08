@@ -32,6 +32,10 @@
 -A INPUT -i lo -j ACCEPT
 -A OUTPUT -o lo -j ACCEPT
 
+# a hack to secure uwsgi / apache communication until unix domain sockets can be made to work
+-A OUTPUT -m tcp --dest 127.1.0.1 -m owner --uid-owner www-data -j ACCEPT
+-A OUTPUT -m tcp --dest 127.1.0.0/16 -j DROP
+
 # allow connections initiated by root
 -A OUTPUT -m owner --uid-owner root -j ACCEPT
 

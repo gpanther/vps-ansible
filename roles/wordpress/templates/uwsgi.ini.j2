@@ -1,0 +1,32 @@
+[uwsgi]
+# mod_proxy_uwsgi doesn't play well with unix sockets :-(
+# use TCP/IP on localhost until that is solved
+socket = 127.1.0.1:{{ id }}
+
+uid = {{ name }}
+gid = {{ name }}
+
+cheaper = 1
+cheaper-initial = 0
+
+# mod_proxy_uwsgi can't set uwsgi modifier, so map 0 to php (instead of python)
+plugin = 0:php
+# needed to enable zend opcode cache
+php-sapi-name = apache
+php-index = index.php
+php-allowed-ext=.php
+# add extensions we wish to load
+php-ini-append = /etc/php5/mods-available/opcache.ini
+php-ini-append = /etc/php5/mods-available/gd.ini
+php-ini-append = /etc/php5/mods-available/imagick.ini
+php-ini-append = /etc/php5/mods-available/json.ini
+php-ini-append = /etc/php5/mods-available/mcrypt.ini
+php-ini-append = /etc/php5/mods-available/memcache.ini
+php-ini-append = /etc/php5/mods-available/mysqli.ini
+php-ini-append = /home/{{ name }}/conf/php.ini
+# try securing the linked libxml
+php-exec-before = /home/{{ name }}/app/libxml_disable_entity_loader.php
+php-docroot = /home/{{ name }}/app
+
+# no need for request logging since we have the apache logs for that
+disable-logging = true

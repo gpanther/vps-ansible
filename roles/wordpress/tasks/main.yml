@@ -1,0 +1,37 @@
+---
+- user: name={{ name }} comment="Wordpress user" shell=/sbin/nologin
+  register: wordpress_user
+- user: name=www-data groups={{ name }} append=yes
+
+- file: path=/home/{{ name }}/{{ item.dirname }} state=directory group={{ name }} owner={{ name }} mode={{ item.mode }}
+  with_items:
+  - { dirname: app, mode: 'u=rx' }
+  - { dirname: tmp, mode: 'u=rwx' }
+  - { dirname: conf, mode: 'u=rx' }
+  - { dirname: webroot, mode: 'u=rx,g=rx' }
+
+- copy: src=libxml_disable_entity_loader.php dest=/home/{{ name }}/app/libxml_disable_entity_loader.php group={{ name }} owner={{ name }} mode=0500
+
+- template: src=php.ini.j2 dest=/home/{{ name }}/conf/php.ini group={{ name }} owner={{ name }} mode=0500
+
+- get_url: url=https://wordpress.org/latest.zip dest=/home/{{ name }}/wordpress-latest.zip group={{ name }} owner={{ name }} mode=0400
+
+- shell: mysql -e "{{ item }}"
+  # hacky way to only execute this the first time
+  when: wordpress_user.changed
+  with_items:
+  - "CREATE DATABASE wordpress_{{ name }}"
+  - "GRANT ALL PRIVILEGES ON wordpress_{{ name }}.* TO 'wordpress_admin_{{ name }}'@'localhost' IDENTIFIED BY '{{ db_admin_password }}'"
+  - "GRANT SELECT, INSERT, UPDATE, DELETE ON wordpress_{{ name }}.* TO 'wordpress_user_{{ name }}'@'localhost' IDENTIFIED BY '{{ db_user_password }}'"
+  - "FLUSH PRIVILEGES"
+
+- template: src=uwsgi.ini.j2 dest=/etc/uwsgi/apps-available/wordpress_{{ name }}.ini owner=root group=root mode=0400
+- file: src=../apps-available/wordpress_{{ name }}.ini dest=/etc/uwsgi/apps-enabled/wordpress_{{ name }}.ini state=link owner=root group=root mode=0400
+  notify:
+  - restart uwsgi
+
+- template: src=apache-vhost.conf.j2 dest=/etc/apache2/sites-available/wordpress_{{ name }}.conf owner=root group=root mode=0400
+- file: src=../sites-available/wordpress_{{ name }}.conf dest=/etc/apache2/sites-enabled/wordpress_{{ name }}.conf state=link owner=root group=root mode=0400
+  notify:
+  - restart apache
+
